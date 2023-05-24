@@ -53,6 +53,7 @@ namespace HuffmanCoding
                     _charBits+=input[offset+i]?'1':'0';
                 char c = (char)Convert.ToByte(_charBits, 2);
                 offset+=8;
+                Console.WriteLine($"Added tree leaf '{c}'");
                 return new Node(){Character=c, Left=null, Right=null};
             } else {
                 Node leftChild = ReadNode(ref input, ref offset);
@@ -82,10 +83,13 @@ namespace HuffmanCoding
         private void EncodeNode(Node node, ref List<bool> output){
             if (node.IsLeaf){
                 output.Add(true);
+                Console.Write(1);
+                Console.Write(node.Character);
                 string _cbs = Convert.ToString(node.Character, 2).PadLeft(8, '0');
                 foreach(char _c in _cbs)
                     output.Add(_c=='1');
             } else {
+                Console.Write(0);
                 output.Add(false);
                 EncodeNode(node.Left, ref output);
                 EncodeNode(node.Right, ref output);
@@ -102,7 +106,9 @@ namespace HuffmanCoding
             //Array.Reverse(bits);
             //output.AddRange(bits.ToList());
             // Zapis drzewa huffmana do pliku (1char=8bits)
+            Console.Write("Huffman Tree: ");
             EncodeNode(Root, ref output);
+            Console.WriteLine();
             Log.Info($"Written huffman tree of total length {output.Count()} bits.");
             // Zapis binarny tekstu
             foreach (char c in raw){
