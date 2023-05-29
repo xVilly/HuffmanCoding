@@ -25,8 +25,8 @@ while (true){
             BitArray encoded = huffmanTree.EncodeText(text);
             FileManager.SaveBinaryFile($"{name}.huff", encoded);
             long lengthAfter = new System.IO.FileInfo($"{name}.huff").Length;
-            double percentage = lengthAfter / lengthBefore * 100.0;
-            Log.Info($"File size before: {lengthBefore}B, after: {lengthAfter}B ({percentage}%)");
+            double percentage = Math.Round(((double)lengthAfter / (double)lengthBefore) * 100.0 - 100, 2);
+            Log.Info($"File size before: {lengthBefore}B, after: {lengthAfter}B ({(percentage>=0?"+":"")}{percentage}%)");
             Console.ReadKey();
             break;
         case "D":
@@ -44,8 +44,8 @@ while (true){
             string decoded = huffmanTree.DecodeText(binary);
             FileManager.SaveTextFile($"{name}.d", decoded);
             lengthAfter = new System.IO.FileInfo($"{name}.d").Length;
-            percentage = lengthAfter / lengthBefore * 100.0;
-            Log.Info($"File size before: {lengthBefore}B, after: {lengthAfter}B ({percentage}%)");
+            percentage = Math.Round(((double)lengthAfter / (double)lengthBefore) * 100.0 - 100, 2);
+            Log.Info($"File size before: {lengthBefore}B, after: {lengthAfter}B ({(percentage >= 0 ? "+" : "")}{percentage}%)");
             Console.ReadKey();
             break;
         case "X":
