@@ -53,6 +53,7 @@ namespace HuffmanCoding
                     _charBits+=input[offset+i]?'1':'0';
                 char c = (char)Convert.ToByte(_charBits, 2);
                 offset+=8;
+                Console.WriteLine($"Added tree leaf '{c}'");
                 return new Node(){Character=c, Left=null, Right=null};
             } else {
                 Node leftChild = ReadNode(ref input, ref offset);
@@ -64,6 +65,7 @@ namespace HuffmanCoding
         public Tree(BitArray input){
             int offset = 0;
             Root = ReadNode(ref input, ref offset);
+            Log.Info($"Node reading complete, huffman tree rebuilt with decode offset {offset} bits.");
             decodeOffset = offset;
         }
 
@@ -71,10 +73,13 @@ namespace HuffmanCoding
         private void EncodeNode(Node node, ref List<bool> output){
             if (node.IsLeaf){
                 output.Add(true);
+                Console.Write(1);
+                Console.Write(node.Character);
                 string _cbs = Convert.ToString(node.Character, 2).PadLeft(8, '0');
                 foreach(char _c in _cbs)
                     output.Add(_c=='1');
             } else {
+                Console.Write(0);
                 output.Add(false);
                 EncodeNode(node.Left, ref output);
                 EncodeNode(node.Right, ref output);
@@ -85,19 +90,23 @@ namespace HuffmanCoding
         public BitArray EncodeText (string raw){
             var output = new List<bool>();
             // Zapis ilości różnych znaków (8 bit)
-            BitArray b = new BitArray(new byte[] { uniqueChars });
-            bool[] bits = new bool[b.Count];
-            b.CopyTo(bits, 0);
-            Array.Reverse(bits);
-            output.AddRange(bits.ToList());
+            //BitArray b = new BitArray(new byte[] { uniqueChars });
+            //bool[] bits = new bool[b.Count];
+            //b.CopyTo(bits, 0);
+            //Array.Reverse(bits);
+            //output.AddRange(bits.ToList());
             // Zapis drzewa huffmana do pliku (1char=8bits)
+            Console.Write("Huffman Tree: ");
             EncodeNode(Root, ref output);
+            Console.WriteLine();
+            Log.Info($"Written huffman tree of total length {output.Count()} bits.");
             // Zapis binarny tekstu
             foreach (char c in raw){
                 // Każdy znak jest zastąpiony przez odpowiadający mu ciąg binarny
                 var encodedChar = Root?.ReadBinaryCode(c, new List<bool>());
                 output.AddRange(encodedChar ?? Enumerable.Empty<bool>());
             }
+            Log.Info($"Written encoded text of total length {output.Count()} bits ({raw.Length} total chars).");
             return new BitArray(output.ToArray());
         }
 
@@ -115,6 +124,7 @@ namespace HuffmanCoding
                     curr = Root;
                 }
             }
+            Log.Info($"Decoded text of total bit length {encoded.Length-decodeOffset}, offset {decodeOffset}, characters {output.Length}");
             return output;
         }
     }

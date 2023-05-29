@@ -64,22 +64,12 @@ namespace HuffmanCoding
 
         public static void SaveTextFile(string FileName, string Text)
         {
-            if (!File.Exists(FileName))
-            {
-                Log.Error($"File \"{FileName}\" does not exist.");
-                return;
-            }
             File.WriteAllText(FileName, Text);
             Log.Info($"Saved text output to \"{FileName}\"");
         }
 
         public static void SaveBinaryFile(string FileName, BitArray Bits)
         {
-            if (!File.Exists(FileName))
-            {
-                Log.Error($"File \"{FileName}\" does not exist.");
-                return;
-            }
             File.WriteAllBytes(FileName, ConvertToByte(Bits));
             Log.Info($"Saved binary output to \"{FileName}\"");
         }
