@@ -62,22 +62,12 @@ namespace HuffmanCoding
         }
 
         public Tree(BitArray input){
-            // Odczytanie ilości znaków (pierwsze 8 bit)
-            /*if (input.Length < 8)
-                return;
-            string _bl = String.Empty;
-            for (int i=0; i<8; i++)
-                _bl+=input[i]?'1':'0';
-            uniqueChars = Convert.ToByte(_bl, 2);
-            // Wyliczenie ilości bitów drzewa
-            int tree_size = 10 * uniqueChars - 1;
-            if (input.Length < 8 + tree_size)
-                return;*/
             int offset = 0;
             Root = ReadNode(ref input, ref offset);
             decodeOffset = offset;
         }
 
+        // 
         private void EncodeNode(Node node, ref List<bool> output){
             if (node.IsLeaf){
                 output.Add(true);
